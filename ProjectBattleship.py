@@ -22,7 +22,7 @@ def inicializarBarcosJugador():
     listJugador = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     for x in range(5):
-        pos = input('Enter your position del 1 al 20 ')
+        pos = input('Ingrese la posicion donde desea colocar los barcos del 1 al 20 ')
         if listJugador[int(pos) - 1] > 0:
             while listJugador[int(pos) - 1] > 0:
                 pos = input(
@@ -44,10 +44,36 @@ def imprimirMenu():
             print(iniciadosJugador)
         if menu == '3':
             barcosDerribados = 0
+            barcosDerribadosCpu = 0
+            turno = 0
             while barcosDerribados != 5:
-                disparo = input('Ingrese la posicion donde desea disparar: ')
-                barcosDerribados = hacerDisparos(
-                    iniciadosCpu, int(disparo), barcosDerribados)
+                if turno != 20:
+                    disparo = input('Ingrese la posicion donde desea disparar: ')
+                    barcosDerribados = hacerDisparos(
+                        iniciadosCpu, int(disparo), barcosDerribados)
+                    turno+=1
+                    barcosDerribadosCpu = hacerDisparosCpu(iniciadosJugador,barcosDerribadosCpu)
+                    print('Turno: '+str(turno))
+                    if turno == 20:
+                        break
+                    if barcosDerribadosCpu == 5:
+                        break
+            if barcosDerribados == barcosDerribadosCpu:
+                print('Empate Barcos Derribados por el Jugador: '+str(barcosDerribados) +'\n Barcos derribados por la CPU ' +str(barcosDerribadosCpu)) 
+                barcosDerribadosCpu= 0
+                barcosDerribados = 0
+                menu = '1' 
+            if barcosDerribados > barcosDerribadosCpu:
+                print('El ganador fue usted barcos derribados: ' +str(barcosDerribados) +'\n Barcos derribados por la CPU ' +str(barcosDerribadosCpu))
+                barcosDerribadosCpu= 0
+                barcosDerribados = 0
+                menu = '1'
+            else:
+                print('El ganador fue la CPU barcos derribados: '+str(barcosDerribadosCpu) +'\n Barcos derribados por usted ' +str(barcosDerribados)) 
+                barcosDerribadosCpu= 0
+                barcosDerribados = 0
+                menu = '1'   
+            
 
         if menu == '4':
             print('4')
@@ -57,17 +83,25 @@ def hacerDisparos(listaCpu, disparo, barcosDerribadosJgd):
     if listaCpu[int(disparo) - 1] == 0:
         print('-1')
     else:
-        print('Barco Derribado ' + str(listaCpu[int(disparo) - 1]))
-        listaCpu[int(disparo) - 1] = 0
+        print('Barco derribado por usted ' + str(listaCpu[int(disparo) - 1]))
+        listaCpu[int(disparo) - 1] =0
         barcosDerribadosJgd += 1
     return barcosDerribadosJgd
 
+def hacerDisparosCpu(listaJugador, barcosDerribadosCpu):
+    disparoRandomCpu = random.randint(1,20)
+
+    if listaJugador[disparoRandomCpu -1] == 0:
+        print('-1')
+    else:
+        print('Barco derribado por la CPU ' +str(listaJugador[disparoRandomCpu -1]))
+        listaJugador[disparoRandomCpu -1] = 0
+        barcosDerribadosCpu+=1
+    return barcosDerribadosCpu
+
 
 def game():
-    cpu = inicializarBarcosComputador()
-    print(cpu)
-    jgd = inicializarBarcosJugador()
-    print(jgd)
+    imprimirMenu()
 
 
-imprimirMenu()
+game()
